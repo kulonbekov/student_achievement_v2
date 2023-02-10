@@ -1,5 +1,6 @@
 package kg.mega.student_achievement_v2.models.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.Date;
 public class ExamDto {
 
     Long id;
+    @JsonFormat(pattern = "dd.MM.yyyy hh:mm")
     Date examDate;
     int duration;
     @JsonProperty("subject")
