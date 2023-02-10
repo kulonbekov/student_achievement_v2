@@ -6,4 +6,6 @@ import kg.mega.student_achievement_v2.models.entities.Subject;
 public interface SubjectMapper {
 
     Subject subjectDtoToEntity (SubjectDto subjectDto);
+
+    SubjectDto subjectToSubjectDto (Subject subject);
 }

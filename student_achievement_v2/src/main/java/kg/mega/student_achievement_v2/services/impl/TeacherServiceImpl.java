@@ -27,4 +27,11 @@ public class TeacherServiceImpl implements TeacherService {
 
         return teacherDto;
     }
+
+    @Override
+    public TeacherDto findById(Long id) {
+        Teacher teacher = teacherRep.findById(id).orElseThrow(()-> new RuntimeException("Преподаватель не найден"));
+        TeacherDto teacherDto = teacherMapper.teacherToTeacherDto(teacher);
+        return teacherDto;
+    }
 }

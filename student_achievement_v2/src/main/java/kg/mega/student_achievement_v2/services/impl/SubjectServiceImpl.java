@@ -25,4 +25,11 @@ public class SubjectServiceImpl implements SubjectService {
 
         return subjectDto;
     }
+
+    @Override
+    public SubjectDto findById(Long id) {
+        Subject subject = subjectRep.findById(id).orElseThrow(()-> new RuntimeException("Предмет не найден"));
+        SubjectDto subjectDto = subjectMapper.subjectToSubjectDto(subject);
+        return subjectDto;
+    }
 }

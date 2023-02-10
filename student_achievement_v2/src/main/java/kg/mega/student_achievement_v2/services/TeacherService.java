@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service;
 public interface TeacherService {
 
     TeacherDto save (TeacherDto teacherDto);
+
+    TeacherDto findById (Long id);
 }

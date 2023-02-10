@@ -12,6 +12,6 @@ public class SubjectDto {
     Long id;
     String name;
     boolean active;
-    @JsonProperty("teacher_id")
+    @JsonProperty("teacher")
     TeacherDto teacherDto;
 }

@@ -4,10 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.mega.student_achievement_v2.models.dtos.SubjectDto;
 import kg.mega.student_achievement_v2.services.SubjectService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "Предмет")
 @RestController
@@ -15,10 +13,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class SubjectController {
 
     private final SubjectService subjectService;
-    public SubjectController(SubjectService subjectService) {
+    private final TeacherService teacherService;
+    public SubjectController(SubjectService subjectService, TeacherService teacherService) {
         this.subjectService = subjectService;
+        this.teacherService = teacherService;
     }
     @PostMapping("/save")
     @ApiOperation("Сохранение")
-    SubjectDto save(@RequestBody SubjectDto subjectDto){return subjectService.save(subjectDto);}
+    SubjectDto save(@RequestBody SubjectDto subjectDto){
+         subjectDto= subjectService.save(subjectDto);
+         subjectDto.setTeacherDto(teacherService.findById(subjectDto.getTeacherDto().getId()));
+        return subjectDto;
+    }
+
+    @GetMapping("/findById")
+    @ApiOperation("Поиск предмета по ID")
+    SubjectDto findById(@RequestParam Long id){
+        return subjectService.findById(id);}
 }

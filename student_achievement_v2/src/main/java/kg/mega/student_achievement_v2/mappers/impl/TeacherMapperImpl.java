@@ -18,4 +18,17 @@ public class TeacherMapperImpl implements TeacherMapper {
         teacher.setActive(teacherDto.isActive());
         return teacher;
     }
+
+    @Override
+    public TeacherDto teacherToTeacherDto(Teacher teacher) {
+
+        TeacherDto teacherDto = new TeacherDto();
+        teacherDto.setId(teacher.getId());
+        teacherDto.setActive(teacher.isActive());
+        teacherDto.setLastName(teacher.getLastName());
+        teacherDto.setFirstName(teacher.getFirstName());
+        teacherDto.setPatronymic(teacher.getPatronymic());
+
+        return teacherDto;
+    }
 }
