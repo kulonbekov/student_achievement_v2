@@ -8,6 +8,9 @@ import kg.mega.student_achievement_v2.services.ScholarshipService;
 import kg.mega.student_achievement_v2.services.StudentService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class ScholarshipServiceImpl implements ScholarshipService {
 
@@ -24,11 +27,14 @@ public class ScholarshipServiceImpl implements ScholarshipService {
     @Override
     public ScholarshipDto save(ScholarshipDto scholarshipDto) {
         Scholarship scholarship = scholarshipMapper.scholarshipDtoToEntity(scholarshipDto);
+        changeEndDate(scholarship.getStudent().getId());
         scholarship = scholarshipRep.save(scholarship);
+
         scholarshipDto.setId(scholarship.getId());
         scholarshipDto.setStartDate(scholarship.getStartDate());
         scholarshipDto.setEndDate(scholarship.getEndDate());
         scholarshipDto.setStudentDto(studentService.findById(scholarship.getStudent().getId()));
+
         return scholarshipDto;
     }
 
@@ -37,5 +43,17 @@ public class ScholarshipServiceImpl implements ScholarshipService {
         Scholarship scholarship = scholarshipRep.findById(id).orElseThrow(()->new RuntimeException("Стипендия не найдена"));
         ScholarshipDto scholarshipDto = scholarshipMapper.scholarshipToScholarshipDto(scholarship);
         return scholarshipDto;
+    }
+
+    @Override
+    public void changeEndDate(Long id) {
+        List<Scholarship> oldScholarship = scholarshipRep.findByStudentId(id);
+        for (Scholarship item: oldScholarship) {
+            if(item.getEndDate().after(new Date())){
+                item.setEndDate(new Date());
+                save(scholarshipMapper.scholarshipToScholarshipDto(item));
+            }
+
+        }
     }
 }

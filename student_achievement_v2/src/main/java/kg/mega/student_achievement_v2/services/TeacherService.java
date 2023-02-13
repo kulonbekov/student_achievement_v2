@@ -9,4 +9,6 @@ public interface TeacherService {
 
     TeacherDto save (TeacherDto teacherDto);
     TeacherDto findById (Long id);
+
+    String delete (Long id);
 }
