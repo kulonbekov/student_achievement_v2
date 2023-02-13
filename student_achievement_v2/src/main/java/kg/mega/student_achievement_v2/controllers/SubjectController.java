@@ -13,16 +13,13 @@ import org.springframework.web.bind.annotation.*;
 public class SubjectController {
 
     private final SubjectService subjectService;
-    private final TeacherService teacherService;
     public SubjectController(SubjectService subjectService, TeacherService teacherService) {
         this.subjectService = subjectService;
-        this.teacherService = teacherService;
     }
     @PostMapping("/save")
     @ApiOperation("Сохранение")
     SubjectDto save(@RequestBody SubjectDto subjectDto){
          subjectDto= subjectService.save(subjectDto);
-         subjectDto.setTeacherDto(teacherService.findById(subjectDto.getTeacherDto().getId()));
         return subjectDto;
     }
 

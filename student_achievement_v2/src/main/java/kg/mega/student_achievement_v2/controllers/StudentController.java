@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class StudentController {
 
     private final StudentService studentService;
-    private final SubjectService subjectService;
 
     public StudentController(StudentService studentService, SubjectService subjectService) {
         this.studentService = studentService;
-        this.subjectService = subjectService;
     }
 
 
@@ -25,7 +23,6 @@ public class StudentController {
     @ApiOperation("Сохранение")
     StudentDto save(@RequestBody StudentDto studentDto){
         studentDto = studentService.save(studentDto);
-        studentDto.setSubjectDto(subjectService.findById(studentDto.getSubjectDto().getId()));
         return studentDto;
     }
     @GetMapping("/findById")

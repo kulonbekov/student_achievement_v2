@@ -10,9 +10,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GradeDto {
     Long id;
-    @JsonProperty("student_id")
+    @JsonProperty("student")
     StudentDto studentDto;
-    @JsonProperty("exam_id")
+    @JsonProperty("exam")
     ExamDto examDto;
     GradeEnum gradeEnum;
 }
