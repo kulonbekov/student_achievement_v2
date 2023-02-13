@@ -1,5 +1,6 @@
 package kg.mega.student_achievement_v2.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import kg.mega.student_achievement_v2.models.utils.DateUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,9 @@ public class Scholarship {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     double scholarshipAmount;
+    @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
     Date startDate;
+    @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
     Date endDate;
 
     @ManyToOne
