@@ -24,4 +24,9 @@ public class Subject {
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     Teacher teacher;
+
+    @PrePersist
+    protected void onCreate() {
+        active = true;
+    }
 }

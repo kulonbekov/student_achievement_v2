@@ -13,7 +13,7 @@ import java.util.Date;
 public class ExamDto {
 
     Long id;
-    @JsonFormat(pattern = "dd.MM.yyyy hh:mm")
+    @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
     Date examDate;
     int duration;
     @JsonProperty("subject")

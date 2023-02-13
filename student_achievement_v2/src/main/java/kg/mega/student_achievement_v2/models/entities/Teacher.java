@@ -25,5 +25,10 @@ public class Teacher {
     String patronymic;
     boolean active;
 
+    @PrePersist
+    protected void onCreate() {
+        active = true;
+    }
+
 
 }

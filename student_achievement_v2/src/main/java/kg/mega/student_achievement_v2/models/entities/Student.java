@@ -27,4 +27,11 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "subject_id")
     Subject subject;
+
+
+    @PrePersist
+    protected void onCreate() {
+    active = true;
+    }
+
 }

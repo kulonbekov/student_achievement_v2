@@ -1,5 +1,6 @@
 package kg.mega.student_achievement_v2.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Exam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
     Date examDate;
     int duration;
     @ManyToOne

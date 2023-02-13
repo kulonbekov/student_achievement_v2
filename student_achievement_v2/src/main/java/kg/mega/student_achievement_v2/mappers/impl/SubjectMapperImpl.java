@@ -1,6 +1,7 @@
 package kg.mega.student_achievement_v2.mappers.impl;
 
 import kg.mega.student_achievement_v2.mappers.SubjectMapper;
+import kg.mega.student_achievement_v2.mappers.TeacherMapper;
 import kg.mega.student_achievement_v2.models.dtos.SubjectDto;
 import kg.mega.student_achievement_v2.models.dtos.TeacherDto;
 import kg.mega.student_achievement_v2.models.entities.Subject;
@@ -9,6 +10,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SubjectMapperImpl implements SubjectMapper {
+
+    private final TeacherMapper teacherMapper;
+
+    public SubjectMapperImpl(TeacherMapper teacherMapper) {
+        this.teacherMapper = teacherMapper;
+    }
+
+
     @Override
     public Subject subjectDtoToEntity(SubjectDto subjectDto) {
 
@@ -17,14 +26,7 @@ public class SubjectMapperImpl implements SubjectMapper {
         subject.setName(subjectDto.getName());
         subject.setActive(subjectDto.isActive());
 
-        Teacher teacher = new Teacher();
-        teacher.setId(subjectDto.getTeacherDto().getId());
-        teacher.setActive(subjectDto.getTeacherDto().isActive());
-        teacher.setFirstName(subjectDto.getTeacherDto().getFirstName());
-        teacher.setLastName(subjectDto.getTeacherDto().getLastName());
-        teacher.setPatronymic(subjectDto.getTeacherDto().getPatronymic());
-
-        subject.setTeacher(teacher);
+        subject.setTeacher(teacherMapper.teacherDtoToEntity(subjectDto.getTeacherDto()));
         return subject;
     }
 
@@ -35,13 +37,7 @@ public class SubjectMapperImpl implements SubjectMapper {
         subjectDto.setName(subject.getName());
         subjectDto.setActive(subject.isActive());
 
-        TeacherDto teacherDto = new TeacherDto();
-        teacherDto.setId(subject.getTeacher().getId());
-        teacherDto.setLastName(subject.getTeacher().getLastName());
-        teacherDto.setFirstName(subject.getTeacher().getFirstName());
-        teacherDto.setPatronymic(subject.getTeacher().getPatronymic());
-
-        subjectDto.setTeacherDto(teacherDto);
+        subjectDto.setTeacherDto(teacherMapper.teacherToTeacherDto(subject.getTeacher()));
         return subjectDto;
     }
 }

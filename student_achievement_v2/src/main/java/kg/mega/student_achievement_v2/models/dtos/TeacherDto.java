@@ -15,6 +15,5 @@ public class TeacherDto {
     String firstName;
     @JsonProperty("patronymic")
     String patronymic;
-    @JsonProperty("isActive")
     boolean active;
 }
