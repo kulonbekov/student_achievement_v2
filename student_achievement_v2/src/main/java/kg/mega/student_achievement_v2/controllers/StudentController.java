@@ -3,6 +3,7 @@ package kg.mega.student_achievement_v2.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.mega.student_achievement_v2.models.dtos.StudentDto;
+import kg.mega.student_achievement_v2.models.responses.StudentResponse;
 import kg.mega.student_achievement_v2.services.StudentService;
 import kg.mega.student_achievement_v2.services.SubjectService;
 import org.springframework.web.bind.annotation.*;
@@ -29,5 +30,11 @@ public class StudentController {
     @ApiOperation("Поиск студента по ID")
     StudentDto findById(@RequestParam Long id){
         return studentService.findById(id);
+    }
+
+    @GetMapping("/getByStudent")
+    @ApiOperation("Вывод инфо о студенте")
+    StudentResponse findByStudent(@RequestParam Long id){
+        return studentService.getByStudent(id);
     }
 }
