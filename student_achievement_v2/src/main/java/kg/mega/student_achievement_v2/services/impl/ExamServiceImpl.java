@@ -6,6 +6,7 @@ import kg.mega.student_achievement_v2.models.dtos.ExamDto;
 import kg.mega.student_achievement_v2.models.entities.Exam;
 import kg.mega.student_achievement_v2.services.ExamService;
 import kg.mega.student_achievement_v2.services.SubjectService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -26,17 +27,16 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamDto save(ExamDto examDto) { //будни дни с 09:00 - 17:00
+    public ResponseEntity<?> save(ExamDto examDto) { //будние дни с 09:00 - 17:00
 
         if(checkDate(examDto.getExamDate(),examDto.getDuration())){
             Exam exam = examMapper.examDtoToEntity(examDto);
             exam = examRep.save(exam);
             examDto.setId(exam.getId());
             examDto.setSubjectDto(subjectService.findById(exam.getSubject().getId()));
-            return examDto;
+            return ResponseEntity.status(205).body(examDto);
         }
-        System.out.println("Invalid date and time!");
-        return null;
+        return ResponseEntity.status(404).body("Invalid date and time!");
     }
 
     @Override

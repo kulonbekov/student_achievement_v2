@@ -20,9 +20,11 @@ public class ExamController {
 
     @PostMapping("/save")
     @ApiOperation("Сохранение")
-   ExamDto save(@RequestBody ExamDto examDto){
-        examDto = examService.save(examDto);
-        return examDto;
+   ResponseEntity<?> save(@RequestBody ExamDto examDto){
+        if(examService.save(examDto) == ResponseEntity.status(205)) {
+            return ResponseEntity.status(205).body(examService.save(examDto));
+        }
+        return ResponseEntity.status(404).body("Invalid date and time!");
     }
 
     @GetMapping("/findById")
