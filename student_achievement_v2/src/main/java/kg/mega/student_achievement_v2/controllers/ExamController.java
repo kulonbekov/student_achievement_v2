@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import kg.mega.student_achievement_v2.models.dtos.ExamDto;
 import kg.mega.student_achievement_v2.services.ExamService;
 import kg.mega.student_achievement_v2.services.SubjectService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "Экзамен")
@@ -19,7 +20,7 @@ public class ExamController {
 
     @PostMapping("/save")
     @ApiOperation("Сохранение")
-    ExamDto save(@RequestBody ExamDto examDto){
+   ExamDto save(@RequestBody ExamDto examDto){
         examDto = examService.save(examDto);
         return examDto;
     }

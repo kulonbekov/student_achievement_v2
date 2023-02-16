@@ -26,7 +26,7 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamDto save(ExamDto examDto) {
+    public ExamDto save(ExamDto examDto) { //будни дни с 09:00 - 17:00
 
         if(checkDate(examDto.getExamDate(),examDto.getDuration())){
             Exam exam = examMapper.examDtoToEntity(examDto);
