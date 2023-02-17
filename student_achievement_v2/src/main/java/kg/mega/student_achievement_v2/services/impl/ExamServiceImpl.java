@@ -29,14 +29,16 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ResponseEntity<?> save(ExamDto examDto) { //будние дни с 09:00 - 17:00
 
-        if(checkDate(examDto.getExamDate(),examDto.getDuration())){
+        if(!checkDate(examDto.getExamDate(),examDto.getDuration())){
+            return ResponseEntity.status(404).body("Invalid date and time!");
+        }else {
             Exam exam = examMapper.examDtoToEntity(examDto);
             exam = examRep.save(exam);
             examDto.setId(exam.getId());
             examDto.setSubjectDto(subjectService.findById(exam.getSubject().getId()));
-            return ResponseEntity.status(205).body(examDto);
+            return ResponseEntity.ok(examDto);
         }
-        return ResponseEntity.status(404).body("Invalid date and time!");
+
     }
 
     @Override
