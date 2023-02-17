@@ -1,14 +1,20 @@
 package kg.mega.student_achievement_v2.services.impl;
 
 import kg.mega.student_achievement_v2.dao.ExamRep;
+import kg.mega.student_achievement_v2.dao.StudentRep;
+import kg.mega.student_achievement_v2.mappers.ExamEmailMapper;
 import kg.mega.student_achievement_v2.mappers.ExamMapper;
+import kg.mega.student_achievement_v2.mappers.StudentMapper;
 import kg.mega.student_achievement_v2.models.dtos.ExamDto;
+import kg.mega.student_achievement_v2.models.dtos.StudentDto;
 import kg.mega.student_achievement_v2.models.entities.Exam;
 import kg.mega.student_achievement_v2.services.ExamService;
+import kg.mega.student_achievement_v2.services.NotificationService;
 import kg.mega.student_achievement_v2.services.SubjectService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -18,10 +24,17 @@ public class ExamServiceImpl implements ExamService {
 
     private final ExamRep examRep;
     private final SubjectService subjectService;
+    private final StudentRep studentRep;
+    private final ExamEmailMapper examEmailMapper;
+    private final NotificationService notificationService;
 
-    public ExamServiceImpl(ExamRep examRep, SubjectService subjectService) {
+
+    public ExamServiceImpl(ExamRep examRep, SubjectService subjectService, StudentRep studentRep, ExamEmailMapper examEmailMapper, NotificationService notificationService) {
         this.examRep = examRep;
         this.subjectService = subjectService;
+        this.studentRep = studentRep;
+        this.examEmailMapper = examEmailMapper;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -34,6 +47,7 @@ public class ExamServiceImpl implements ExamService {
             exam = examRep.save(exam);
             examDto.setId(exam.getId());
             examDto.setSubjectDto(subjectService.findById(exam.getSubject().getId()));
+            settingEmail(examDto);
             return ResponseEntity.ok(examDto);
         }
 
@@ -80,5 +94,19 @@ public class ExamServiceImpl implements ExamService {
 
         }
         return true;
+    }
+
+    @Override
+    public void settingEmail(ExamDto examDto) { // При добавления нового экзамена, отправляется письмо студенту по почте
+        StudentDto studentDto = StudentMapper.INSTANCE.studentToStudentDto(studentRep.findbyStudent(examDto.getSubjectDto().getId()));
+        String email = studentDto.getEmail();
+        String subject = "Exam: " + examDto.getSubjectDto().getName();
+        String text = examEmailMapper.examDtoToString(examDto);
+
+        try {
+            notificationService.send(email, subject, text);
+        }catch (Exception e){
+            e.getMessage();
+        }
     }
 }

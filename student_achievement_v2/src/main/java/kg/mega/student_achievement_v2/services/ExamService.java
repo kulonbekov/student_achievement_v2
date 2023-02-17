@@ -13,5 +13,7 @@ public interface ExamService {
 
     Boolean checkDate(Date date, int duration);
 
+    void settingEmail(ExamDto examDto);
+
 
 }
