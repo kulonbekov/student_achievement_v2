@@ -14,6 +14,7 @@ public class StudentDto {
     String patronymic;
     boolean active;
     String address;
+    String email;
     @JsonProperty("subject")
     SubjectDto subjectDto;
 }

@@ -15,18 +15,17 @@ import java.util.List;
 public class ScholarshipServiceImpl implements ScholarshipService {
 
     private final ScholarshipRep scholarshipRep;
-    private final ScholarshipMapper scholarshipMapper;
+
     private final StudentService studentService;
 
-    public ScholarshipServiceImpl(ScholarshipRep scholarshipRep, ScholarshipMapper scholarshipMapper, StudentService studentService) {
+    public ScholarshipServiceImpl(ScholarshipRep scholarshipRep, StudentService studentService) {
         this.scholarshipRep = scholarshipRep;
-        this.scholarshipMapper = scholarshipMapper;
         this.studentService = studentService;
     }
 
     @Override
     public ScholarshipDto save(ScholarshipDto scholarshipDto) {
-        Scholarship scholarship = scholarshipMapper.scholarshipDtoToEntity(scholarshipDto);
+        Scholarship scholarship = ScholarshipMapper.INSTANCE.scholarshipDtoToEntity(scholarshipDto);
         changeEndDate(scholarship.getStudent().getId());
         scholarship = scholarshipRep.save(scholarship);
 
@@ -41,7 +40,7 @@ public class ScholarshipServiceImpl implements ScholarshipService {
     @Override
     public ScholarshipDto findById(Long id) {
         Scholarship scholarship = scholarshipRep.findById(id).orElseThrow(()->new RuntimeException("Стипендия не найдена"));
-        ScholarshipDto scholarshipDto = scholarshipMapper.scholarshipToScholarshipDto(scholarship);
+        ScholarshipDto scholarshipDto = ScholarshipMapper.INSTANCE.scholarshipToScholarshipDto(scholarship);
         return scholarshipDto;
     }
 
@@ -51,7 +50,7 @@ public class ScholarshipServiceImpl implements ScholarshipService {
         for (Scholarship item: oldScholarship) {
             if(item.getEndDate().after(new Date())){
                 item.setEndDate(new Date());
-                save(scholarshipMapper.scholarshipToScholarshipDto(item));
+                save(ScholarshipMapper.INSTANCE.scholarshipToScholarshipDto(item));
             }
 
         }

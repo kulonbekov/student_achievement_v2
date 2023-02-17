@@ -24,6 +24,7 @@ public class Student {
     String patronymic;
     boolean active;
     String address;
+    String email;
     @ManyToOne
     @JoinColumn(name = "subject_id")
     Subject subject;

@@ -16,12 +16,10 @@ import java.util.Date;
 @Service
 public class ExamServiceImpl implements ExamService {
 
-    private final ExamMapper examMapper;
     private final ExamRep examRep;
     private final SubjectService subjectService;
 
-    public ExamServiceImpl(ExamMapper examMapper, ExamRep examRep, SubjectService subjectService) {
-        this.examMapper = examMapper;
+    public ExamServiceImpl(ExamRep examRep, SubjectService subjectService) {
         this.examRep = examRep;
         this.subjectService = subjectService;
     }
@@ -32,7 +30,7 @@ public class ExamServiceImpl implements ExamService {
         if(!checkDate(examDto.getExamDate(),examDto.getDuration())){
             return ResponseEntity.status(404).body("Invalid date and time!");
         }else {
-            Exam exam = examMapper.examDtoToEntity(examDto);
+            Exam exam = ExamMapper.INSTANCE.examDtoToEntity(examDto);
             exam = examRep.save(exam);
             examDto.setId(exam.getId());
             examDto.setSubjectDto(subjectService.findById(exam.getSubject().getId()));
@@ -44,7 +42,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamDto findById(Long id) {
         Exam exam = examRep.findById(id).orElseThrow(()-> new RuntimeException("Экзамен не найден"));
-        ExamDto examDto = examMapper.examToExamDto(exam);
+        ExamDto examDto = ExamMapper.INSTANCE.examToExamDto(exam);
         return examDto;
     }
 

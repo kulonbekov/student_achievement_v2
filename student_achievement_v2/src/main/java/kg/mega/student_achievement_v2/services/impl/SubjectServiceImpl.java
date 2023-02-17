@@ -10,19 +10,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
-    private final SubjectMapper subjectMapper;
     private final SubjectRep subjectRep;
     private final TeacherService teacherService;
 
-    public SubjectServiceImpl(SubjectMapper subjectMapper, SubjectRep subjectRep, TeacherService teacherService) {
-        this.subjectMapper = subjectMapper;
+    public SubjectServiceImpl( SubjectRep subjectRep, TeacherService teacherService) {
         this.subjectRep = subjectRep;
         this.teacherService = teacherService;
     }
 
     @Override
     public SubjectDto save(SubjectDto subjectDto) {
-        Subject subject = subjectMapper.subjectDtoToEntity(subjectDto);
+        Subject subject = SubjectMapper.INSTANCE.subjectDtoToEntity(subjectDto);
         subject = subjectRep.save(subject);
         subjectDto.setId(subject.getId());
         subjectDto.setTeacherDto(teacherService.findById(subject.getTeacher().getId()));
@@ -32,7 +30,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public SubjectDto findById(Long id) {
         Subject subject = subjectRep.findById(id).orElseThrow(()-> new RuntimeException("Предмет не найден"));
-        SubjectDto subjectDto = subjectMapper.subjectToSubjectDto(subject);
+        SubjectDto subjectDto = SubjectMapper.INSTANCE.subjectToSubjectDto(subject);
         return subjectDto;
     }
 }

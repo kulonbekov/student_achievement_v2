@@ -5,7 +5,7 @@ import kg.mega.student_achievement_v2.dao.ScholarshipRep;
 import kg.mega.student_achievement_v2.dao.StudentRep;
 import kg.mega.student_achievement_v2.mappers.GradeMapper;
 import kg.mega.student_achievement_v2.mappers.StudentMapper;
-import kg.mega.student_achievement_v2.models.dtos.GradeDto;
+import kg.mega.student_achievement_v2.mappers.StudentResponseMapper;
 import kg.mega.student_achievement_v2.models.dtos.StudentDto;
 import kg.mega.student_achievement_v2.models.entities.Grade;
 import kg.mega.student_achievement_v2.models.entities.Scholarship;
@@ -22,24 +22,22 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRep studentRep;
-    private final StudentMapper studentMapper;
+    private final StudentResponseMapper studentResponseMapper;
     private final SubjectService subjectService;
     private final ScholarshipRep scholarshipRep;
     private final GradeRep gradeRep;
-    private final GradeMapper gradeMapper;
 
-    public StudentServiceImpl(StudentRep studentRep, StudentMapper studentMapper, SubjectService subjectService, ScholarshipRep scholarshipRep, GradeRep gradeRep, GradeMapper gradeMapper) {
+    public StudentServiceImpl(StudentRep studentRep,  StudentResponseMapper studentResponseMapper, SubjectService subjectService, ScholarshipRep scholarshipRep, GradeRep gradeRep) {
         this.studentRep = studentRep;
-        this.studentMapper = studentMapper;
+        this.studentResponseMapper = studentResponseMapper;
         this.subjectService = subjectService;
         this.scholarshipRep = scholarshipRep;
         this.gradeRep = gradeRep;
-        this.gradeMapper = gradeMapper;
     }
 
     @Override
     public StudentDto save(StudentDto studentDto) {
-        Student student = studentMapper.studentDtoToEntity(studentDto);
+        Student student = StudentMapper.INSTANCE.studentDtoToEntity(studentDto);
         student = studentRep.save(student);
         studentDto.setId(student.getId());
         studentDto.setSubjectDto(subjectService.findById(student.getSubject().getId()));
@@ -49,14 +47,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentDto findById(Long id) {
         Student student = studentRep.findById(id).orElseThrow(()-> new RuntimeException("Студент не найден"));
-        StudentDto studentDto = studentMapper.studentToStudentDto(student);
+        StudentDto studentDto = StudentMapper.INSTANCE.studentToStudentDto(student);
         return studentDto;
     }
 
     @Override
     public StudentResponse getByStudent(Long id) {
         List<Grade> grades = gradeRep.findByStudent(id);
-        StudentResponse studentResponse = studentMapper.studentDtoToResponse(grades);
+        StudentResponse studentResponse = studentResponseMapper.studentDtoToResponse(grades);
         studentResponse.setScholarshipAmount(getScholarship(id));
         return studentResponse;
     }

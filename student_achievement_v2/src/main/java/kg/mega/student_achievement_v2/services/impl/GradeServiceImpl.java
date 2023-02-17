@@ -12,13 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class GradeServiceImpl implements GradeService {
 
-    private final GradeMapper gradeMapper;
     private final GradeRep gradeRep;
     private final StudentService studentService;
     private final ExamService examService;
 
-    public GradeServiceImpl(GradeMapper gradeMapper, GradeRep gradeRep, StudentService studentService, ExamService examService) {
-        this.gradeMapper = gradeMapper;
+    public GradeServiceImpl( GradeRep gradeRep, StudentService studentService, ExamService examService) {
         this.gradeRep = gradeRep;
         this.studentService = studentService;
         this.examService = examService;
@@ -26,7 +24,7 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public GradeDto save(GradeDto gradeDto) {
-        Grade grade = gradeMapper.gradeDtoToEntity(gradeDto);
+        Grade grade = GradeMapper.INSTANCE.gradeDtoToEntity(gradeDto);
         grade = gradeRep.save(grade);
         gradeDto.setId(grade.getId());
         gradeDto.setStudentDto(studentService.findById(grade.getStudent().getId()));
@@ -37,7 +35,7 @@ public class GradeServiceImpl implements GradeService {
     @Override
     public GradeDto findById(Long id) {
         Grade grade = gradeRep.findById(id).orElseThrow(()->new RuntimeException("Запись не найден"));
-        GradeDto gradeDto = gradeMapper.gradeToGradeDto(grade);
+        GradeDto gradeDto = GradeMapper.INSTANCE.gradeToGradeDto(grade);
         return gradeDto;
     }
 }
