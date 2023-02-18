@@ -52,6 +52,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public List<StudentDto> findAll() {
+        return StudentMapper.INSTANCE.studentToStudentDtos(studentRep.findAll());
+    }
+
+    @Override
     public StudentResponse getByStudent(Long id) {
         List<Grade> grades = gradeRep.findByStudent(id);
         StudentResponse studentResponse = studentResponseMapper.studentDtoToResponse(grades);
