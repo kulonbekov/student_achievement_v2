@@ -45,6 +45,11 @@ public class ScholarshipServiceImpl implements ScholarshipService {
     }
 
     @Override
+    public List<ScholarshipDto> findAll() {
+        return ScholarshipMapper.INSTANCE.scholarshipToScholarshipDtos(scholarshipRep.findAll());
+    }
+
+    @Override
     public void changeEndDate(Long id) {
         List<Scholarship> oldScholarship = scholarshipRep.findByStudentId(id);
         for (Scholarship item: oldScholarship) {
