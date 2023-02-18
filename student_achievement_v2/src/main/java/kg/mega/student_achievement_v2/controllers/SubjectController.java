@@ -37,4 +37,8 @@ public class SubjectController {
     ResponseEntity<List<SubjectDto>> findAll(){
         return ResponseEntity.ok(subjectService.findAll());
     }
+    @DeleteMapping ("/delete")
+    @ApiOperation("Удаление")
+    ResponseEntity<?> delete(@RequestParam Long id){
+        return subjectService.delete(id);}
 }

@@ -28,15 +28,17 @@ public class TeacherController {
     TeacherDto findById(@RequestParam Long id)
     {return teacherService.findById(id);}
 
-    @DeleteMapping ("/delete")
-    @ApiOperation("Удаление")
-    ResponseEntity<?> update(@RequestParam Long id){
-        return teacherService.delete(id);}
-
     @GetMapping("/findAll")
     @ApiOperation("Вывод всех преподавателей")
     ResponseEntity<List<TeacherDto>> findAll(){
         return ResponseEntity.ok(teacherService.findAll());
     }
+
+    @DeleteMapping ("/delete")
+    @ApiOperation("Удаление")
+    ResponseEntity<?> delete(@RequestParam Long id){
+        return teacherService.delete(id);}
+
+
 
 }

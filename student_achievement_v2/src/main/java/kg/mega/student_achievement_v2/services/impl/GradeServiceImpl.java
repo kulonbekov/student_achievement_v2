@@ -9,6 +9,8 @@ import kg.mega.student_achievement_v2.services.GradeService;
 import kg.mega.student_achievement_v2.services.StudentService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GradeServiceImpl implements GradeService {
 
@@ -37,5 +39,10 @@ public class GradeServiceImpl implements GradeService {
         Grade grade = gradeRep.findById(id).orElseThrow(()->new RuntimeException("Запись не найден"));
         GradeDto gradeDto = GradeMapper.INSTANCE.gradeToGradeDto(grade);
         return gradeDto;
+    }
+
+    @Override
+    public List<GradeDto> findAll() {
+        return GradeMapper.INSTANCE.gradeToGradeDtos(gradeRep.findAll());
     }
 }

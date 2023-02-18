@@ -2,11 +2,15 @@ package kg.mega.student_achievement_v2.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import kg.mega.student_achievement_v2.models.dtos.ExamDto;
 import kg.mega.student_achievement_v2.models.dtos.GradeDto;
 import kg.mega.student_achievement_v2.services.ExamService;
 import kg.mega.student_achievement_v2.services.GradeService;
 import kg.mega.student_achievement_v2.services.StudentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(tags = "Оценки")
 @RestController
@@ -29,6 +33,12 @@ public class GradeController {
     @ApiOperation("Поиск экзамена по ID")
     GradeDto findById (@RequestParam Long id){
         return gradeService.findById(id);
+    }
+
+    @GetMapping("/findAll")
+    @ApiOperation("Вывод всех оценок")
+    ResponseEntity<List<GradeDto>> findAll(){
+        return ResponseEntity.ok(gradeService.findAll());
     }
 
 }

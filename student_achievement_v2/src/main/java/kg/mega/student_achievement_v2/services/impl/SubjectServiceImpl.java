@@ -1,23 +1,30 @@
 package kg.mega.student_achievement_v2.services.impl;
 
+import kg.mega.student_achievement_v2.dao.ExamRep;
 import kg.mega.student_achievement_v2.dao.SubjectRep;
 import kg.mega.student_achievement_v2.mappers.SubjectMapper;
 import kg.mega.student_achievement_v2.models.dtos.SubjectDto;
+import kg.mega.student_achievement_v2.models.entities.Exam;
 import kg.mega.student_achievement_v2.models.entities.Subject;
 import kg.mega.student_achievement_v2.services.SubjectService;
 import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
     private final SubjectRep subjectRep;
     private final TeacherService teacherService;
+    private final ExamRep examRep;
 
-    public SubjectServiceImpl( SubjectRep subjectRep, TeacherService teacherService) {
+    public SubjectServiceImpl( SubjectRep subjectRep, TeacherService teacherService,
+                               ExamRep examRep) {
         this.subjectRep = subjectRep;
         this.teacherService = teacherService;
+        this.examRep = examRep;
     }
 
     @Override
@@ -39,5 +46,19 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public List<SubjectDto> findAll() {
         return SubjectMapper.INSTANCE.subjectToSubjectDtos(subjectRep.findAll());
+    }
+
+    @Override
+    public ResponseEntity<?> delete(Long id) {
+        List<Exam> exams = examRep.findBySubject(id);
+        for (Exam item: exams) {
+            if(item.getExamDate().after(new Date()))
+                return ResponseEntity.status(404).body("Error! Cannot be deleted");
+        }
+        SubjectDto subjectDto = findById(id);
+        subjectDto.setActive(false);
+        Subject subject = SubjectMapper.INSTANCE.subjectDtoToEntity(subjectDto);
+        subjectRep.save(subject);
+        return ResponseEntity.ok(subjectDto);
     }
 }
