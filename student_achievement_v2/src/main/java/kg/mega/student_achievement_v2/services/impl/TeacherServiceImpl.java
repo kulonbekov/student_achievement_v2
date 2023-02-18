@@ -7,6 +7,7 @@ import kg.mega.student_achievement_v2.models.dtos.TeacherDto;
 import kg.mega.student_achievement_v2.models.entities.Subject;
 import kg.mega.student_achievement_v2.models.entities.Teacher;
 import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,17 +42,17 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public String delete(Long id) {
+    public ResponseEntity<?> delete(Long id) {
 
         List<Subject> subjectList = subjectRep.findByTeacher(id);
         for (Subject item: subjectList) {
             if(item.isActive());
-            return "Error! Cannot be deleted";
+            return ResponseEntity.status(404).body("Error! Cannot be deleted");
         }
         TeacherDto teacherDto = findById(id);
         teacherDto.setActive(false);
         Teacher teacher = TeacherMapper.INSTANCE.teacherDtoToEntity(teacherDto);
         teacherRep.save(teacher);
-        return "1 entry record successfully deleted";
+        return ResponseEntity.ok(teacherDto);
     }
 }

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import kg.mega.student_achievement_v2.models.dtos.TeacherDto;
 import kg.mega.student_achievement_v2.models.entities.Teacher;
 import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "Преподаватель")
@@ -27,6 +28,6 @@ public class TeacherController {
 
     @DeleteMapping ("/delete")
     @ApiOperation("Удаление")
-    String  update(@RequestParam Long id){
+    ResponseEntity<?> update(@RequestParam Long id){
         return teacherService.delete(id);}
 }
