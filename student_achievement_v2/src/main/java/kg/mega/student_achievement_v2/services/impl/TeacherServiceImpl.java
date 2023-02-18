@@ -42,6 +42,11 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public List<TeacherDto> findAll() {
+        return TeacherMapper.INSTANCE.teacherToTeacherDtos(teacherRep.findAll());
+    }
+
+    @Override
     public ResponseEntity<?> delete(Long id) {
 
         List<Subject> subjectList = subjectRep.findByTeacher(id);

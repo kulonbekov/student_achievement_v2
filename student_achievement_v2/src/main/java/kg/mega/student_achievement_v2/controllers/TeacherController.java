@@ -8,6 +8,8 @@ import kg.mega.student_achievement_v2.services.TeacherService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = "Преподаватель")
 @RestController
 @RequestMapping("/api/v1/teacher")
@@ -30,4 +32,11 @@ public class TeacherController {
     @ApiOperation("Удаление")
     ResponseEntity<?> update(@RequestParam Long id){
         return teacherService.delete(id);}
+
+    @GetMapping("/findAll")
+    @ApiOperation("Вывод всех преподавателей")
+    ResponseEntity<List<TeacherDto>> findAll(){
+        return ResponseEntity.ok(teacherService.findAll());
+    }
+
 }
