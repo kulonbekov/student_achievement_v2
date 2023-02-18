@@ -8,6 +8,8 @@ import kg.mega.student_achievement_v2.services.SubjectService;
 import kg.mega.student_achievement_v2.services.TeacherService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SubjectServiceImpl implements SubjectService {
     private final SubjectRep subjectRep;
@@ -32,5 +34,10 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = subjectRep.findById(id).orElseThrow(()-> new RuntimeException("Предмет не найден"));
         SubjectDto subjectDto = SubjectMapper.INSTANCE.subjectToSubjectDto(subject);
         return subjectDto;
+    }
+
+    @Override
+    public List<SubjectDto> findAll() {
+        return SubjectMapper.INSTANCE.subjectToSubjectDtos(subjectRep.findAll());
     }
 }

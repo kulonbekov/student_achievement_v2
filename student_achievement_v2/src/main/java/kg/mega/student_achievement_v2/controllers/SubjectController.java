@@ -3,9 +3,13 @@ package kg.mega.student_achievement_v2.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.mega.student_achievement_v2.models.dtos.SubjectDto;
+import kg.mega.student_achievement_v2.models.dtos.TeacherDto;
 import kg.mega.student_achievement_v2.services.SubjectService;
 import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(tags = "Предмет")
 @RestController
@@ -27,4 +31,10 @@ public class SubjectController {
     @ApiOperation("Поиск предмета по ID")
     SubjectDto findById(@RequestParam Long id){
         return subjectService.findById(id);}
+
+    @GetMapping("/findAll")
+    @ApiOperation("Вывод всех предметов")
+    ResponseEntity<List<SubjectDto>> findAll(){
+        return ResponseEntity.ok(subjectService.findAll());
+    }
 }
