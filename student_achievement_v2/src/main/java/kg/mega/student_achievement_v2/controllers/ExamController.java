@@ -4,10 +4,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.mega.student_achievement_v2.dao.ExamRep;
 import kg.mega.student_achievement_v2.models.dtos.ExamDto;
+import kg.mega.student_achievement_v2.models.dtos.SubjectDto;
 import kg.mega.student_achievement_v2.services.ExamService;
 import kg.mega.student_achievement_v2.services.SubjectService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(tags = "Экзамен")
 @RestController
@@ -33,5 +36,11 @@ public class ExamController {
     @ApiOperation("Поиск экзамена по ID")
     ExamDto findById(@RequestParam Long id){
         return examService.findById(id);
+    }
+
+    @GetMapping("/findAll")
+    @ApiOperation("Вывод всех экзаменов")
+    ResponseEntity<List<ExamDto>> findAll(){
+        return ResponseEntity.ok(examService.findAll());
     }
 }

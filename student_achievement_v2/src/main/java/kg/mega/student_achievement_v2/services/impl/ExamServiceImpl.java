@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -58,6 +59,11 @@ public class ExamServiceImpl implements ExamService {
         Exam exam = examRep.findById(id).orElseThrow(()-> new RuntimeException("Экзамен не найден"));
         ExamDto examDto = ExamMapper.INSTANCE.examToExamDto(exam);
         return examDto;
+    }
+
+    @Override
+    public List<ExamDto> findAll() {
+        return ExamMapper.INSTANCE.examToExamDtos(examRep.findAll());
     }
 
     @Override
