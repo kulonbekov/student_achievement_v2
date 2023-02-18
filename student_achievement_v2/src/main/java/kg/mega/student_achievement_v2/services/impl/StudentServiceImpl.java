@@ -3,6 +3,7 @@ package kg.mega.student_achievement_v2.services.impl;
 import kg.mega.student_achievement_v2.dao.GradeRep;
 import kg.mega.student_achievement_v2.dao.ScholarshipRep;
 import kg.mega.student_achievement_v2.dao.StudentRep;
+import kg.mega.student_achievement_v2.dao.SubjectRep;
 import kg.mega.student_achievement_v2.mappers.GradeMapper;
 import kg.mega.student_achievement_v2.mappers.StudentMapper;
 import kg.mega.student_achievement_v2.mappers.StudentResponseMapper;
@@ -13,6 +14,7 @@ import kg.mega.student_achievement_v2.models.entities.Student;
 import kg.mega.student_achievement_v2.models.responses.StudentResponse;
 import kg.mega.student_achievement_v2.services.StudentService;
 import kg.mega.student_achievement_v2.services.SubjectService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,13 +28,16 @@ public class StudentServiceImpl implements StudentService {
     private final SubjectService subjectService;
     private final ScholarshipRep scholarshipRep;
     private final GradeRep gradeRep;
+    private final SubjectRep subjectRep;
 
-    public StudentServiceImpl(StudentRep studentRep,  StudentResponseMapper studentResponseMapper, SubjectService subjectService, ScholarshipRep scholarshipRep, GradeRep gradeRep) {
+    public StudentServiceImpl(StudentRep studentRep,  StudentResponseMapper studentResponseMapper, SubjectService subjectService, ScholarshipRep scholarshipRep, GradeRep gradeRep,
+                              SubjectRep subjectRep) {
         this.studentRep = studentRep;
         this.studentResponseMapper = studentResponseMapper;
         this.subjectService = subjectService;
         this.scholarshipRep = scholarshipRep;
         this.gradeRep = gradeRep;
+        this.subjectRep = subjectRep;
     }
 
     @Override
@@ -54,6 +59,15 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentDto> findAll() {
         return StudentMapper.INSTANCE.studentToStudentDtos(studentRep.findAll());
+    }
+
+    @Override
+    public StudentDto update(StudentDto studentDto) {
+        Student student = studentRep.findById(studentDto.getId()).orElseThrow(()-> new RuntimeException("Студент не найден"));
+        StudentDto newStudentDto = StudentMapper.INSTANCE.studentToStudentDto(student);
+        newStudentDto = studentResponseMapper.studentDtoTDto(studentDto,newStudentDto);
+        student = StudentMapper.INSTANCE.studentDtoToEntity(newStudentDto);
+        return StudentMapper.INSTANCE.studentToStudentDto(studentRep.save(student));
     }
 
     @Override

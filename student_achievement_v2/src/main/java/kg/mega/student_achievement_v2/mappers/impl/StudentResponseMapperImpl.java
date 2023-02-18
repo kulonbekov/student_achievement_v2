@@ -1,6 +1,8 @@
 package kg.mega.student_achievement_v2.mappers.impl;
 
+import kg.mega.student_achievement_v2.dao.StudentRep;
 import kg.mega.student_achievement_v2.mappers.StudentResponseMapper;
+import kg.mega.student_achievement_v2.models.dtos.StudentDto;
 import kg.mega.student_achievement_v2.models.entities.Grade;
 import kg.mega.student_achievement_v2.models.responses.ExamResponse;
 import kg.mega.student_achievement_v2.models.responses.StudentResponse;
@@ -12,6 +14,13 @@ import java.util.List;
 
 @Service
 public class StudentResponseMapperImpl implements StudentResponseMapper {
+
+    private final StudentRep studentRep;
+
+    public StudentResponseMapperImpl(StudentRep studentRep) {
+        this.studentRep = studentRep;
+    }
+
     @Override
     public StudentResponse studentDtoToResponse(List<Grade> grade) {
         StudentResponse studentResponse = new StudentResponse();
@@ -34,5 +43,17 @@ public class StudentResponseMapperImpl implements StudentResponseMapper {
         studentResponse.setSubjectResponse(subjectResponses);
 
         return studentResponse;
+    }
+
+    @Override
+    public StudentDto studentDtoTDto(StudentDto studentDto, StudentDto newStudentDto) {
+        newStudentDto.setActive(studentDto.isActive());
+        newStudentDto.setFirstName(studentDto.getFirstName());
+        newStudentDto.setLastName(studentDto.getLastName());
+        newStudentDto.setPatronymic(studentDto.getPatronymic());
+        newStudentDto.setAddress(studentDto.getAddress());
+        newStudentDto.setEmail(studentDto.getEmail());
+        newStudentDto.setSubjectDto(studentDto.getSubjectDto());
+        return newStudentDto;
     }
 }
