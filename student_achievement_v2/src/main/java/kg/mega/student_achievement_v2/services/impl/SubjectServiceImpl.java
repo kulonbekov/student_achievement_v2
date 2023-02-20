@@ -61,4 +61,25 @@ public class SubjectServiceImpl implements SubjectService {
         subjectRep.save(subject);
         return ResponseEntity.ok(subjectDto);
     }
+
+    @Override
+    public ResponseEntity<?> update(SubjectDto subjectDto) {
+        try{
+            teacherService.update(subjectDto.getTeacherDto());
+        }catch (Exception e){
+            return ResponseEntity.status(404).body("Teacher not found, cannot be updated!");
+        }
+        try{
+            Subject subject = subjectRep.findById(subjectDto.getId()).orElseThrow(()-> new RuntimeException("Subject not found, cannot be updated!"));
+            subject = SubjectMapper.INSTANCE.subjectDtoToEntity(subjectDto);
+            subject = subjectRep.save(subject);
+            return ResponseEntity.ok(SubjectMapper.INSTANCE.subjectToSubjectDto(subject));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body("Subject not found, cannot be updated!");
+        }
+
+
+
+
+    }
 }

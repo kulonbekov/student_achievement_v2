@@ -63,7 +63,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherDto update(TeacherDto teacherDto) {
-        Teacher teacher = TeacherMapper.INSTANCE.teacherDtoToEntity(teacherDto);
+        Teacher teacher = teacherRep.findById(teacherDto.getId()).orElseThrow(()-> new RuntimeException("Teacher not found, cannot be updated!"));
+        teacher = TeacherMapper.INSTANCE.teacherDtoToEntity(teacherDto);
         teacher = teacherRep.save(teacher);
         return TeacherMapper.INSTANCE.teacherToTeacherDto(teacher);
     }

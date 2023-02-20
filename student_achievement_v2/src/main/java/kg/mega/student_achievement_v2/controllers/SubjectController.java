@@ -40,5 +40,12 @@ public class SubjectController {
     @DeleteMapping ("/delete")
     @ApiOperation("Удаление")
     ResponseEntity<?> delete(@RequestParam Long id){
-        return subjectService.delete(id);}
+        return subjectService.delete(id);
+    }
+
+    @PutMapping("/update")
+    @ApiOperation("Изменения")
+    ResponseEntity<?> update(@RequestBody SubjectDto subjectDto){
+        return ResponseEntity.status(404).body(subjectService.update(subjectDto));
+    }
 }

@@ -12,4 +12,5 @@ public interface SubjectService {
     SubjectDto findById (Long id);
     List<SubjectDto> findAll();
     ResponseEntity<?> delete (Long id);
+    ResponseEntity<?> update (SubjectDto subjectDto);
 }

@@ -46,7 +46,7 @@ public class TeacherController {
         try{
             return ResponseEntity.ok(teacherService.update(teacherDto));
         }catch (Exception e){
-            return ResponseEntity.status(404).body("Преподаватель не найден");
+            return ResponseEntity.status(404).body("Teacher not found, cannot be updated!");
         }
 
     }
