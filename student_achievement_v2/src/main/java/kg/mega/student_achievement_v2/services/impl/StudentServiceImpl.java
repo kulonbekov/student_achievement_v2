@@ -4,7 +4,6 @@ import kg.mega.student_achievement_v2.dao.GradeRep;
 import kg.mega.student_achievement_v2.dao.ScholarshipRep;
 import kg.mega.student_achievement_v2.dao.StudentRep;
 import kg.mega.student_achievement_v2.dao.SubjectRep;
-import kg.mega.student_achievement_v2.mappers.GradeMapper;
 import kg.mega.student_achievement_v2.mappers.StudentMapper;
 import kg.mega.student_achievement_v2.mappers.StudentResponseMapper;
 import kg.mega.student_achievement_v2.models.dtos.StudentDto;
@@ -14,6 +13,8 @@ import kg.mega.student_achievement_v2.models.entities.Student;
 import kg.mega.student_achievement_v2.models.responses.StudentResponse;
 import kg.mega.student_achievement_v2.services.StudentService;
 import kg.mega.student_achievement_v2.services.SubjectService;
+import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +27,17 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRep studentRep;
     private final StudentResponseMapper studentResponseMapper;
     private final SubjectService subjectService;
+    private final TeacherService teacherService;
     private final ScholarshipRep scholarshipRep;
     private final GradeRep gradeRep;
     private final SubjectRep subjectRep;
 
-    public StudentServiceImpl(StudentRep studentRep,  StudentResponseMapper studentResponseMapper, SubjectService subjectService, ScholarshipRep scholarshipRep, GradeRep gradeRep,
+    public StudentServiceImpl(StudentRep studentRep, StudentResponseMapper studentResponseMapper, SubjectService subjectService, TeacherService teacherService, ScholarshipRep scholarshipRep, GradeRep gradeRep,
                               SubjectRep subjectRep) {
         this.studentRep = studentRep;
         this.studentResponseMapper = studentResponseMapper;
         this.subjectService = subjectService;
+        this.teacherService = teacherService;
         this.scholarshipRep = scholarshipRep;
         this.gradeRep = gradeRep;
         this.subjectRep = subjectRep;
@@ -51,7 +54,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDto findById(Long id) {
-        Student student = studentRep.findById(id).orElseThrow(()-> new RuntimeException("Студент не найден"));
+        Student student = studentRep.findById(id).orElseThrow(()-> new RuntimeException("Student not found"));
         StudentDto studentDto = StudentMapper.INSTANCE.studentToStudentDto(student);
         return studentDto;
     }
@@ -62,12 +65,27 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto update(StudentDto studentDto) {
-        Student student = studentRep.findById(studentDto.getId()).orElseThrow(()-> new RuntimeException("Студент не найден"));
-        StudentDto newStudentDto = StudentMapper.INSTANCE.studentToStudentDto(student);
-        newStudentDto = studentResponseMapper.studentDtoTDto(studentDto,newStudentDto);
-        student = StudentMapper.INSTANCE.studentDtoToEntity(newStudentDto);
-        return StudentMapper.INSTANCE.studentToStudentDto(studentRep.save(student));
+    public ResponseEntity<?> update(StudentDto studentDto) {
+        try{
+            subjectService.update(studentDto.getSubjectDto());
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found, cannot be updated!");
+        }
+        try{
+            teacherService.update(studentDto.getSubjectDto().getTeacherDto());
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Teacher not found, cannot be updated!");
+        }
+
+        try{
+            Student student = studentRep.findById(studentDto.getId()).orElseThrow(()-> new RuntimeException("Student not found"));
+            student = StudentMapper.INSTANCE.studentDtoToEntity(studentDto);
+            student = studentRep.save(student);
+            return ResponseEntity.status(HttpStatus.OK).body(StudentMapper.INSTANCE.studentToStudentDto(student));
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found, cannot be updated!");
+        }
+
     }
 
     @Override

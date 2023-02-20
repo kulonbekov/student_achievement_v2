@@ -16,7 +16,7 @@ public interface StudentService {
     StudentDto findById(Long id);
     List<StudentDto> findAll();
 
-    StudentDto update(StudentDto studentDto);
+    ResponseEntity<?> update(StudentDto studentDto);
 
     StudentResponse getByStudent(Long id);
 

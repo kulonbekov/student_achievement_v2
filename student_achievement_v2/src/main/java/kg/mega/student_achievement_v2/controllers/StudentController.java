@@ -51,12 +51,7 @@ public class StudentController {
     @PutMapping("/update")
     @ApiOperation("Изменения")
     ResponseEntity<?> update(@RequestBody StudentDto studentDto){
-        try{
-            return ResponseEntity.ok(studentService.update(studentDto));
-        }catch (Exception e){
-            return ResponseEntity.status(404).body("Студент не найден");
-        }
-
+            return ResponseEntity.accepted().body(studentService.update(studentDto));
     }
 
 }

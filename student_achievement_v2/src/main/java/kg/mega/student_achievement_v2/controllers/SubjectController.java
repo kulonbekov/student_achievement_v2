@@ -6,6 +6,8 @@ import kg.mega.student_achievement_v2.models.dtos.SubjectDto;
 import kg.mega.student_achievement_v2.models.dtos.TeacherDto;
 import kg.mega.student_achievement_v2.services.SubjectService;
 import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,17 @@ public class SubjectController {
 
     @GetMapping("/findById")
     @ApiOperation("Поиск предмета по ID")
-    SubjectDto findById(@RequestParam Long id){
-        return subjectService.findById(id);}
+    ResponseEntity<?> findById(@RequestParam Long id) {
+        SubjectDto subjectDto = null;
+        try{
+            subjectDto = subjectService.findById(id);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found!");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(subjectDto);
+    }
+
+
 
     @GetMapping("/findAll")
     @ApiOperation("Вывод всех предметов")
@@ -46,6 +57,6 @@ public class SubjectController {
     @PutMapping("/update")
     @ApiOperation("Изменения")
     ResponseEntity<?> update(@RequestBody SubjectDto subjectDto){
-        return ResponseEntity.status(404).body(subjectService.update(subjectDto));
+        return ResponseEntity.accepted().body(subjectService.update(subjectDto));
     }
 }

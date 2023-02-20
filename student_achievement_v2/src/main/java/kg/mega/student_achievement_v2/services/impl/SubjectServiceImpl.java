@@ -8,6 +8,8 @@ import kg.mega.student_achievement_v2.models.entities.Exam;
 import kg.mega.student_achievement_v2.models.entities.Subject;
 import kg.mega.student_achievement_v2.services.SubjectService;
 import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,8 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public SubjectDto findById(Long id) {
-        Subject subject = subjectRep.findById(id).orElseThrow(()-> new RuntimeException("Предмет не найден"));
+        Subject subject = subjectRep.findById(id).orElseThrow(()-> new RuntimeException("Subject not found"));
+        subject = subjectRep.findById(id).orElseThrow(()-> new RuntimeException("Subject not found"));
         SubjectDto subjectDto = SubjectMapper.INSTANCE.subjectToSubjectDto(subject);
         return subjectDto;
     }
@@ -64,19 +67,21 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public ResponseEntity<?> update(SubjectDto subjectDto) {
+        Subject subject = null;
         try{
             teacherService.update(subjectDto.getTeacherDto());
         }catch (Exception e){
-            return ResponseEntity.status(404).body("Teacher not found, cannot be updated!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Teacher not found, cannot be updated!");
         }
-        try{
-            Subject subject = subjectRep.findById(subjectDto.getId()).orElseThrow(()-> new RuntimeException("Subject not found, cannot be updated!"));
-            subject = SubjectMapper.INSTANCE.subjectDtoToEntity(subjectDto);
-            subject = subjectRep.save(subject);
-            return ResponseEntity.ok(SubjectMapper.INSTANCE.subjectToSubjectDto(subject));
+        try {
+            subject = subjectRep.findById(subjectDto.getId()).orElseThrow(() -> new RuntimeException("Subject not found"));
+
         }catch (Exception e){
-            return ResponseEntity.status(404).body("Subject not found, cannot be updated!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found, cannot be updated!");
         }
+        subject = SubjectMapper.INSTANCE.subjectDtoToEntity(subjectDto);
+        subject = subjectRep.save(subject);
+        return ResponseEntity.ok(SubjectMapper.INSTANCE.subjectToSubjectDto(subject));
 
 
 
