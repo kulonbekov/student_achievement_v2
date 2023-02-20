@@ -2,6 +2,7 @@ package kg.mega.student_achievement_v2.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import kg.mega.student_achievement_v2.models.dtos.StudentDto;
 import kg.mega.student_achievement_v2.models.dtos.TeacherDto;
 import kg.mega.student_achievement_v2.models.entities.Teacher;
 import kg.mega.student_achievement_v2.services.TeacherService;
@@ -38,6 +39,17 @@ public class TeacherController {
     @ApiOperation("Удаление")
     ResponseEntity<?> delete(@RequestParam Long id){
         return teacherService.delete(id);}
+
+    @PutMapping("/update")
+    @ApiOperation("Изменения")
+    ResponseEntity<?> update(@RequestBody TeacherDto teacherDto){
+        try{
+            return ResponseEntity.ok(teacherService.update(teacherDto));
+        }catch (Exception e){
+            return ResponseEntity.status(404).body("Преподаватель не найден");
+        }
+
+    }
 
 
 

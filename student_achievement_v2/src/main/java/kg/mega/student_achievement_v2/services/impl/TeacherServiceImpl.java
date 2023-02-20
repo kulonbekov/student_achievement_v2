@@ -60,4 +60,11 @@ public class TeacherServiceImpl implements TeacherService {
         teacherRep.save(teacher);
         return ResponseEntity.ok(teacherDto);
     }
+
+    @Override
+    public TeacherDto update(TeacherDto teacherDto) {
+        Teacher teacher = TeacherMapper.INSTANCE.teacherDtoToEntity(teacherDto);
+        teacher = teacherRep.save(teacher);
+        return TeacherMapper.INSTANCE.teacherToTeacherDto(teacher);
+    }
 }

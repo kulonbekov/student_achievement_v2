@@ -14,5 +14,6 @@ public interface TeacherService {
     TeacherDto findById (Long id);
     List<TeacherDto> findAll();
     ResponseEntity<?> delete (Long id);
+    TeacherDto update (TeacherDto teacherDto);
 
 }

@@ -49,7 +49,7 @@ public class StudentController {
     }
 
     @PutMapping("/update")
-    @ApiOperation("изменения")
+    @ApiOperation("Изменения")
     ResponseEntity<?> update(@RequestBody StudentDto studentDto){
         try{
             return ResponseEntity.ok(studentService.update(studentDto));
