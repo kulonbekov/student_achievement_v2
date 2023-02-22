@@ -8,13 +8,15 @@ import kg.mega.student_achievement_v2.mappers.StudentMapper;
 import kg.mega.student_achievement_v2.models.dtos.ExamDto;
 import kg.mega.student_achievement_v2.models.dtos.StudentDto;
 import kg.mega.student_achievement_v2.models.entities.Exam;
+import kg.mega.student_achievement_v2.models.entities.Student;
 import kg.mega.student_achievement_v2.services.ExamService;
 import kg.mega.student_achievement_v2.services.NotificationService;
 import kg.mega.student_achievement_v2.services.SubjectService;
+import kg.mega.student_achievement_v2.services.TeacherService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,14 +27,16 @@ public class ExamServiceImpl implements ExamService {
 
     private final ExamRep examRep;
     private final SubjectService subjectService;
+    private final TeacherService teacherService;
     private final StudentRep studentRep;
     private final ExamEmailMapper examEmailMapper;
     private final NotificationService notificationService;
 
 
-    public ExamServiceImpl(ExamRep examRep, SubjectService subjectService, StudentRep studentRep, ExamEmailMapper examEmailMapper, NotificationService notificationService) {
+    public ExamServiceImpl(ExamRep examRep, SubjectService subjectService, TeacherService teacherService, StudentRep studentRep, ExamEmailMapper examEmailMapper, NotificationService notificationService) {
         this.examRep = examRep;
         this.subjectService = subjectService;
+        this.teacherService = teacherService;
         this.studentRep = studentRep;
         this.examEmailMapper = examEmailMapper;
         this.notificationService = notificationService;
@@ -114,5 +118,29 @@ public class ExamServiceImpl implements ExamService {
         }catch (Exception e){
             e.getMessage();
         }
+    }
+
+    @Override
+    public ResponseEntity<?> update(ExamDto examDto) {
+        Exam exam = null;
+        try{
+            subjectService.update(examDto.getSubjectDto());
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found, cannot be updated!");
+        }
+        try{
+            teacherService.update(examDto.getSubjectDto().getTeacherDto());
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Teacher not found, cannot be updated!");
+        }
+        try{
+            exam = examRep.findById(examDto.getId()).orElseThrow(()-> new RuntimeException("Exam not found"));
+            exam = ExamMapper.INSTANCE.examDtoToEntity(examDto);
+            exam = examRep.save(exam);
+            return ResponseEntity.status(HttpStatus.OK).body(ExamMapper.INSTANCE.examToExamDto(exam));
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Exam not found, cannot be updated!");
+        }
+
     }
 }

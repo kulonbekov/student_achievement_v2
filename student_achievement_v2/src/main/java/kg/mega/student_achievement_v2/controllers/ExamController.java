@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kg.mega.student_achievement_v2.dao.ExamRep;
 import kg.mega.student_achievement_v2.models.dtos.ExamDto;
+import kg.mega.student_achievement_v2.models.dtos.StudentDto;
 import kg.mega.student_achievement_v2.models.dtos.SubjectDto;
 import kg.mega.student_achievement_v2.services.ExamService;
 import kg.mega.student_achievement_v2.services.SubjectService;
@@ -42,5 +43,11 @@ public class ExamController {
     @ApiOperation("Вывод всех экзаменов")
     ResponseEntity<List<ExamDto>> findAll(){
         return ResponseEntity.ok(examService.findAll());
+    }
+
+    @PutMapping("/update")
+    @ApiOperation("Изменения")
+    ResponseEntity<?> update(@RequestBody ExamDto examDto){
+        return ResponseEntity.accepted().body(examService.update(examDto));
     }
 }
